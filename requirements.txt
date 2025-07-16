@@ -1,2 +1,5 @@
 pytest
 playwright
+pytest-html
+dotenv
+pytest-json-report

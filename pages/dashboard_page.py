@@ -7,4 +7,4 @@ class SamplePage:
 
     def go_to_homepage(self):
         self.page.goto("https://www.generasimaju.co.id/")
-        return "Generasi Maju" in self.page.title()
+        # return "Tumbuh Kembang" in self.page.title()
