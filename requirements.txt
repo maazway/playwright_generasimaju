@@ -3,3 +3,4 @@ playwright
 pytest-html
 dotenv
 pytest-json-report
+pytz

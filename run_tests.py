@@ -1,58 +1,45 @@
 import subprocess
 import os
 import sys
-import json
-import time
 from datetime import datetime
+import pytz
 from dotenv import load_dotenv
 from utils.email_report import send_email_with_attachment
 
 load_dotenv()
 
-def wait_for_json(path, timeout=5):
-    for _ in range(timeout * 10):
-        if os.path.exists(path):
-            return True
-        time.sleep(0.1)
-    return False
-
-def parse_test_result_json(path):
-    try:
-        with open(path, "r") as f:
-            report = json.load(f)
-        total = report["summary"]["total"]
-        passed = report["summary"]["passed"]
-        failed = report["summary"]["failed"]
-        return total, passed, failed
-    except Exception:
-        return 0, 0, 0
-
 if __name__ == "__main__":
+    # Target file/folder test
     test_target = sys.argv[1] if len(sys.argv) > 1 else "tests/"
-    report_path = "test_report.html"
-    json_path = "report.json"
 
-    # Jalankan pytest via subprocess
-    cmd = [
+    # Nama file HTML report
+    report_path = "test_report.html"
+
+    # Pastikan di root folder
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_dir)
+
+    # Jalankan pytest dengan HTML report
+    # Tampilkan langsung ke terminal (tanpa capture_output)
+    subprocess.run([
         "pytest",
         test_target,
         f"--html={report_path}",
-        "--self-contained-html",
-        "--json-report",
-        f"--json-report-file={json_path}"
-    ]
+        "--self-contained-html"
+    ], shell=True)
 
-    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Waktu WIB timezone-aware
+    now_wib = datetime.now(pytz.timezone("Asia/Jakarta"))
+    waktu = now_wib.strftime("%d %b %Y | %H:%M WIB")
 
-    # Pastikan JSON selesai ditulis
-    if wait_for_json(json_path):
-        total, passed, failed = parse_test_result_json(json_path)
-    else:
-        total, passed, failed = 0, 0, 0
+    # Hitung hasil dari isi HTML report
+    with open(report_path, "r", encoding="utf-8") as f:
+        html = f.read()
+        passed = html.count("✔")
+        failed = html.count("✘")
+        total = passed + failed
 
-    now_wib = datetime.utcnow().timestamp() + (7 * 3600)
-    waktu = datetime.fromtimestamp(now_wib).strftime("%d %b %Y | %H:%M WIB")
-
+    # Buat subject dan body
     subject = f"TEST REPORT - {waktu}"
     body = f"""Hasil test selesai:
 - Total: {total}
@@ -60,6 +47,7 @@ if __name__ == "__main__":
 - Failed: {failed}
 """
 
+    # Kirim email
     recipients = os.getenv("EMAIL_TO", "").split(",")
 
     send_email_with_attachment(
@@ -71,3 +59,4 @@ if __name__ == "__main__":
         smtp_pass=os.getenv("EMAIL_PASS"),
         attachment_path=report_path
     )
+
