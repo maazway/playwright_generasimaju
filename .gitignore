@@ -32,6 +32,7 @@ allure-report*/
 *.log
 *.out
 .json
+report.json
 
 # IDE settings
 .vscode/
