@@ -15,19 +15,19 @@ Ini adalah proyek **automated testing** berbasis **Python + Playwright + Pytest*
 
 ---
 
-## 🗂️ Struktur Folder
+## 📁 Struktur Folder
 
 playwright_generasimaju/
-├── pages/ # Page Object untuk setiap halaman
-│ └── home_page.py
-├── tests/ # Test case per fitur
-│ └── login/
-│ └── test_login.py
+├── pages/                  # Page Object untuk setiap halaman
+│   └── home_page.py
+├── tests/                  # Test case per fitur
+│   └── login/
+│       └── test_login.py
 ├── utils/
-│ └── email_report.py # Fungsi kirim email dengan attachment
-├── .env # Variabel email (jangan di-push)
+│   └── email_report.py     # Fungsi kirim email dengan attachment
+├── .env                    # Variabel email (jangan di-push)
 ├── .gitignore
-├── conftest.py # Fixture Playwright untuk pytest
-├── run_tests.py # Entry point: jalankan test + kirim email
+├── conftest.py             # Fixture Playwright untuk pytest
+├── run_tests.py            # Entry point: jalankan test + kirim email
 ├── requirements.txt
 └── README.md
