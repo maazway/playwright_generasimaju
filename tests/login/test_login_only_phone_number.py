@@ -14,9 +14,7 @@ def test_click_masuk(page):
     home_page.click_masuk_button()
     # Input nomor hp
     login_page.fill_phone_number()
-    # Input password
-    login_page.fill_password()
     # Klik button login
     login_page.click_masuk_button()
-    # Verify login berhasil
-    login_page.is_login_successful()
+    # Verify password belum diisi
+    login_page.is_password_null()
