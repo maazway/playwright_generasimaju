@@ -1,4 +1,4 @@
-from pages.home_page import HomePage
+from pages.homePage import HomePage
 
 def test_click_artikel(page):
     home = HomePage(page)
