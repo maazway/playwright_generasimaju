@@ -44,10 +44,18 @@ if __name__ == "__main__":
     total, passed, failed = parse_test_result_json(report_json)
 
     subject = f"TEST REPORT - {waktu}"
-    body = f"""Hasil test selesai:
-- Total: {total}
-- Passed: {passed}
-- Failed: {failed}
+    body = f"""
+<b>Hasil Otomatisasi Test - https://www.generasimaju.co.id/</b><br>
+<b>Waktu:</b> {waktu}<br><br>
+
+<b>Summary:</b><br>
+• Total Test: <b>{total}</b><br>
+• Passed : <b>{passed}</b><br>
+• Failed : <b>{failed}</b><br><br>
+
+<i>Detail lengkap dapat dilihat pada file HTML report terlampir.</i><br><br>
+
+<b>Report ini dikirim otomatis</b>
 """
 
     recipients = os.getenv("EMAIL_TO", "").split(",")
