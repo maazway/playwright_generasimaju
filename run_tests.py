@@ -2,6 +2,7 @@ import subprocess
 import os
 import sys
 import json
+import re
 from datetime import datetime
 import pytz
 from dotenv import load_dotenv
@@ -29,33 +30,39 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base_dir)
 
-    subprocess.run([
+    # Jalankan test dan ambil stdout
+    result = subprocess.run([
         "pytest",
         test_target,
         f"--html={report_html}",
         "--self-contained-html",
         "--json-report",
         f"--json-report-file={report_json}"
-    ], shell=True)
+    ], capture_output=True, text=True, shell=True)
 
+    # Cari durasi dari output
+    match = re.search(r"=+.+in (\d+\.\d+)s", result.stdout)
+    duration = match.group(1) + " detik" if match else "N/A"
+
+    # Ambil waktu WIB
     now_wib = datetime.now(pytz.timezone("Asia/Jakarta"))
     waktu = now_wib.strftime("%d %b %Y | %H:%M WIB")
 
     total, passed, failed = parse_test_result_json(report_json)
 
-    subject = f"TEST REPORT - {waktu}"
+    subject = f"Automation Test Report for GenMaju - {waktu}"
     body = f"""
-<b>Hasil Otomatisasi Test - https://www.generasimaju.co.id/</b><br>
-<b>Waktu:</b> {waktu}<br><br>
+<b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
 
 <b>Summary:</b><br>
 • Total Test: <b>{total}</b><br>
 • Passed : <b>{passed}</b><br>
-• Failed : <b>{failed}</b><br><br>
+• Failed : <b>{failed}</b><br>
+• Duration : <b>{duration}</b><br><br>
 
-<i>Detail lengkap dapat dilihat pada file HTML report terlampir.</i><br><br>
+<i>Check the attached HTML report for the full test results</i><br><br>
 
-<b>Report ini dikirim otomatis</b>
+<b>This report is auto-generated and maintained by Mazway</b>
 """
 
     recipients = os.getenv("EMAIL_TO", "").split(",")

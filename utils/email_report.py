@@ -10,7 +10,7 @@ def send_email_with_attachment(subject, body, to_emails, from_email, smtp_user, 
     msg["Subject"] = subject
 
     # Tambah body teks
-    msg.attach(MIMEText(body, "plain"))
+    msg.attach(MIMEText(body, "html"))
 
     # Tambah file attachment
     with open(attachment_path, "rb") as f:
