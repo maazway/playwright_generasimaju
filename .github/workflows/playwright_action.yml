@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 22 * * *'  # 05:00 WIB
     - cron: '0 10 * * *'  # 17:00 WIB
-  workflow_dispatch:      # Bisa dijalankan manual juga
+  workflow_dispatch:      # Bisa dijalankan manual
 
 jobs:
   test:
