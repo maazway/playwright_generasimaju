@@ -17,5 +17,3 @@ class HomePage:
         # Klik tombol "Masuk" (ambil elemen pertama)
         self.page.locator("text=Masuk").first.click()
     
-    def close_broser(self):
-        return self.page

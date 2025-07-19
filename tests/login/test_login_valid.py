@@ -2,7 +2,7 @@ import pytest
 from pages.homePage import HomePage
 from pages.loginPage import loginPage
 
-def test_click_masuk(page):
+def test_login_valid(page):
     home_page = HomePage(page)
     login_page = loginPage(page)
 

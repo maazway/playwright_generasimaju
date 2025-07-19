@@ -14,11 +14,40 @@ class loginPage:
     def fill_phone_number(self):
         phone = os.getenv("PHONE_NUMBER")
         self.page.locator('input[placeholder*="Masukkan Nomor Handphone"]').fill(phone)
+    def fill_invalid_long_phone(self):
+        phone = os.getenv("INVALID_PHONE_NUMBER")
+        self.page.locator('input[placeholder*="Masukkan Nomor Handphone"]').fill(phone)
+    def fill_invalid_short_phone(self):
+        phone = os.getenv("INVALID_PHONE_SHORT")
+        self.page.locator('input[placeholder*="Masukkan Nomor Handphone"]').fill(phone)
+    def fill_invalid_long_phone(self):
+        phone = os.getenv("INVALID_PHONE_LONG")
+        self.page.locator('input[placeholder*="Masukkan Nomor Handphone"]').fill(phone)
     def fill_password(self):
         password = os.getenv("PASSWORD")
         self.page.locator('input[placeholder*="Masukkan Password"]').fill(password)
     def click_masuk_button(self):
         self.page.locator("#handphone-submit").click()
+    def fill_invalid_password(self):
+        password = os.getenv("INVALID_PASSWORD")
+        self.page.locator('input[placeholder*="Masukkan Password"]').fill(password)
+    def click_masuk_button(self):
+        self.page.locator("#handphone-submit").click()
+    
+    def fill_invalid_short_password(self):
+        password = os.getenv("INVALID_PASSWORD_SHORT")
+        self.page.locator('input[placeholder*="Masukkan Password"]').fill(password)
+    
+    def clear_password(self):
+        self.page.locator('input[placeholder*="Masukkan Password"]').fill('')
+
+    def fill_and_clear_password(self):
+        self.fill_password()
+        self.clear_password()
+    
+    def click_masuk_button(self):
+        self.page.locator("#handphone-submit").click()
+
     #Assertion
     def is_login_successful(self):
         locator = self.page.locator("text=Login Berhasil")
@@ -29,6 +58,23 @@ class loginPage:
         locator.wait_for(timeout=10000)
         assert locator.is_visible()
     def is_password_null(self):
+        locator = self.page.locator("text=Nomor Handphone harus diisi angka")
+        locator.wait_for(timeout=10000)
+        assert locator.is_visible()
+    def is_invalid_short_phone(self):
+        locator = self.page.locator("text=Nomor Handphone minimal 10")
+        locator.wait_for(timeout=10000)
+        assert locator.is_visible()
+    def is_invalid_long_phone(self):
+        locator = self.page.locator("text=Nomor Handphone maksimal 13")
+        locator.wait_for(timeout=10000)
+        assert locator.is_visible()
+    def is_invalid_short_password(self):
         locator = self.page.locator("text=Password minimal 8 karakter")
         locator.wait_for(timeout=10000)
         assert locator.is_visible()
+    def is_invalid_password(self):
+        locator = self.page.locator("text=Password belum diisi")
+        locator.wait_for(timeout=10000)
+        assert locator.is_visible()
+        

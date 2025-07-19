@@ -61,5 +61,3 @@ if __name__ == "__main__":
         smtp_pass=os.getenv("EMAIL_PASS"),
         attachment_path=report_html
     )
-
-
