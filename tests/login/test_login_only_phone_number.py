@@ -17,4 +17,4 @@ def test_login_only_phone_number(page):
     # Klik button login
     login_page.click_masuk_button()
     # Verify password belum diisi
-    login_page.is_password_null()
+    login_page.is_invalid_short_password()
