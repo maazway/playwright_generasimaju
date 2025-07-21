@@ -36,10 +36,8 @@ if __name__ == "__main__":
         f"--html={report_html}",
         "--self-contained-html",
         "--json-report",
-        f"--json-report-file={report_json}",
-        "--maxfail=1000",
-        "--disable-warnings"
-    ], capture_output=True, text=True)  # Hapus shell=True
+        f"--json-report-file={report_json}"
+    ], shell=True)
 
     # Cari durasi test
     match = re.search(r"=+.+in (\d+\.\d+)s", result.stdout)

@@ -31,3 +31,6 @@ jobs:
 
       - name: Run tests
         run: python run_tests.py
+
+      - name: Run all tests
+        run: python runall.py
