@@ -1,6 +1,6 @@
-pytest
 playwright
-pytest-html
+pytest
 dotenv
-pytest-json-report
 pytz
+pytest-html
+pytest-json-report

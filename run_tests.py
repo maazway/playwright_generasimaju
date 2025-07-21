@@ -30,6 +30,17 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base_dir)
 
+    subprocess.run([
+    "pytest",
+    test_target,
+    f"--html={report_html}",
+    "--self-contained-html",
+    "--json-report",
+    f"--json-report-file={report_json}",
+    "--maxfail=1",
+    "--disable-warnings"
+    ], shell=True)
+
     # Jalankan test dan ambil stdout
     result = subprocess.run([
         "pytest",
@@ -52,18 +63,17 @@ if __name__ == "__main__":
 
     subject = f"Automation Test Report for GenMaju - {waktu}"
     body = f"""
-<b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
+    <b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
 
-<b>Summary:</b><br>
-• Total Test: <b>{total}</b><br>
-• Passed : <b>{passed}</b><br>
-• Failed : <b>{failed}</b><br>
-• Duration : <b>{duration}</b><br><br>
+    <b>Summary:</b><br>
+    • Total Test: <b>{total}</b><br>
+    • Passed : <b>{passed}</b><br>
+    • Failed : <b>{failed}</b><br>
+    • Duration : <b>{duration}</b><br><br>
 
-<i>Check the attached HTML report for the full test results</i><br><br>
-
-<b>This report is auto-generated and maintained by Mazway</b>
-"""
+    <b>Check the attached HTML report for the full test results</b><br>
+    <i>This report is auto-generated and maintained by Mazway</i>
+    """
 
     recipients = os.getenv("EMAIL_TO", "").split(",")
 
