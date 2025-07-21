@@ -85,6 +85,4 @@ if __name__ == "__main__":
         )
     else:
         print("Gagal mengirim email: file report HTML tidak ditemukan.")
-        print("DEBUG EMAIL_USER:", os.environ.get("EMAIL_USER"))
-        print("DEBUG EMAIL_PASS:", "SET" if os.environ.get("EMAIL_PASS") else "MISSING")
-        print("DEBUG EMAIL_TO:", os.environ.get("EMAIL_TO"))
+        
