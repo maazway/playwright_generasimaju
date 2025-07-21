@@ -55,19 +55,22 @@ if __name__ == "__main__":
     # Susun email
     subject = f"Automation Test Report for GenMaju - {waktu}"
     body = f"""
-<b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
+    <b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
 
-<b>Summary:</b><br>
-• Total Test: <b>{total}</b><br>
-• Passed : <b>{passed}</b><br>
-• Failed : <b>{failed}</b><br>
-• Duration : <b>{duration}</b><br><br>
+    <b>Summary:</b><br>
+    • Total Test: <b>{total}</b><br>
+    • Passed : <b>{passed}</b><br>
+    • Failed : <b>{failed}</b><br>
+    • Duration : <b>{duration}</b><br><br>
 
-<b>Check the attached HTML report for the full test results</b><br>
-<i>This report is auto-generated and maintained by Mazway</i>
-"""
+    <b>Check the attached HTML report for the full test results</b><br>
+    <i>This report is auto-generated and maintained by Mazway</i>
+    """
 
     recipients = os.getenv("EMAIL_TO", "").split(",")
+
+    print("EMAIL_USER:", os.getenv("EMAIL_USER"))
+    print("EMAIL_PASS:", "OK" if os.getenv("EMAIL_PASS") else "MISSING")
 
     # Kirim email hanya jika file HTML tersedia
     if os.path.exists(report_html):
