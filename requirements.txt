@@ -4,3 +4,4 @@ dotenv
 pytz
 pytest-html
 pytest-json-report
+pytest-playwright
