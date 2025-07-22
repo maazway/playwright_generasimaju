@@ -1,18 +1,11 @@
-import os
 import pytest
-
-pytest_plugins = ["pytest_playwright.plugin"]
+from playwright.sync_api import sync_playwright
 
 @pytest.fixture(scope="function")
-def page(playwright):
-    headless = os.getenv("HEADLESS", "true").lower() == "true"
-    user_agent = os.getenv("USER_AGENT", None)
-
-    browser = playwright.chromium.launch(headless=headless)
-    context = browser.new_context(user_agent=user_agent)
-    page = context.new_page()
-
-    yield page
-
-    context.close()
-    browser.close()
+def page():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+        yield page
+        browser.close()

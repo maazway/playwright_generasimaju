@@ -11,6 +11,7 @@ from utils.email_report import send_email_with_attachment
 load_dotenv()
 
 def parse_test_result_json(json_path):
+    """Ambil total, passed, failed dari file JSON report."""
     try:
         with open(json_path, "r", encoding="utf-8") as f:
             report = json.load(f)
@@ -22,11 +23,24 @@ def parse_test_result_json(json_path):
         print(f"Gagal parsing JSON: {e}")
         return 0, 0, 0
 
-def build_env_with_user_agent():
-    # Tambahkan env vars khusus untuk pytest-playwright
-    os.environ["PYTHONUNBUFFERED"] = "1"
-    os.environ["HEADLESS"] = "false"  # non-headless
-    os.environ["USER_AGENT"] = "Mozilla/5.0 (CI Playwright)"
+def run_pytest_live(command):
+    """Jalankan pytest dan tampilkan output real-time."""
+    process = subprocess.Popen(
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+        bufsize=1
+    )
+
+    full_output = ""
+    for line in process.stdout:
+        print(line, end="")
+        full_output += line
+
+    process.wait()
+    return full_output
 
 if __name__ == "__main__":
     test_target = sys.argv[1] if len(sys.argv) > 1 else "tests/"
@@ -36,34 +50,15 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base_dir)
 
-    build_env_with_user_agent()
-
-    print("\nRunning tests...\n")
-
-    command = [
-        "pytest",
-        test_target,
-        f"--html={report_html}",
-        "--self-contained-html",
-        "--json-report",
-        f"--json-report-file={report_json}",
-        "--maxfail=1000",
-        "--disable-warnings"
-    ]
-
-    process = subprocess.Popen(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
+    pytest_command = (
+        f"pytest {test_target} "
+        f"--html={report_html} --self-contained-html "
+        f"--json-report --json-report-file={report_json} "
+        f"--maxfail=1000 --disable-warnings"
     )
 
-    full_output = ""
-    for line in process.stdout:
-        print(line, end="")  # real-time output
-        full_output += line
-
-    process.wait()
+    print("Running tests...\n")
+    full_output = run_pytest_live(pytest_command)
 
     match = re.search(r"in (\d+\.\d+)s", full_output)
     duration = match.group(1) + " seconds" if match else "N/A"
@@ -106,4 +101,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Failed to send email: {e}")
     else:
-        print("EMAIL_USER or EMAIL_PASS not set — email not sent.")
+        print("EMAIL_USER or EMAIL_PASS not set in .env — email not sent.")
