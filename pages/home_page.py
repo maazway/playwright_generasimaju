@@ -1,4 +1,3 @@
-# home_page.py (updated for CI safety)
 from playwright.sync_api import Page, expect
 
 class HomePage:
@@ -7,7 +6,7 @@ class HomePage:
 
     def open(self):
         self.page.goto("https://www.generasimaju.co.id/")
-        self.page.wait_for_load_state("networkidle")
+        # self.page.wait_for_load_state("networkidle")
 
     def click_cookie_consent(self):
         try:
