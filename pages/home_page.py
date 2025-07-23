@@ -18,6 +18,7 @@ class HomePage:
             pass 
 
     def click_masuk_button(self):
+        self.page.wait_for_selector("text=Masuk", timeout=10000)
         self.button_masuk.click()
 
     def hover_kalkulator_menu(self):
