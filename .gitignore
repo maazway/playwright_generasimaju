@@ -41,3 +41,6 @@ report.json
 # OS files
 .DS_Store
 Thumbs.db
+
+# older files
+code_lama

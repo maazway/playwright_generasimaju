@@ -1,30 +1,32 @@
-import subprocess
 import os
 import sys
 import json
 import re
+import subprocess
 from datetime import datetime
+
 import pytz
 from dotenv import load_dotenv
+
 from utils.email_report import send_email_with_attachment
 
 load_dotenv()
 
+
 def parse_test_result_json(json_path):
-    """Ambil total, passed, failed dari file JSON report."""
+    """Parse test result JSON report and return total, passed, and failed counts."""
     try:
         with open(json_path, "r", encoding="utf-8") as f:
             report = json.load(f)
-        total = report.get("summary", {}).get("total", 0)
-        passed = report.get("summary", {}).get("passed", 0)
-        failed = report.get("summary", {}).get("failed", 0)
-        return total, passed, failed
+        summary = report.get("summary", {})
+        return summary.get("total", 0), summary.get("passed", 0), summary.get("failed", 0)
     except Exception as e:
-        print(f"Gagal parsing JSON: {e}")
+        print(f"Failed to parse JSON report: {e}")
         return 0, 0, 0
 
+
 def run_pytest_live(command):
-    """Jalankan pytest dan tampilkan output real-time."""
+    """Run pytest command and stream output in real-time."""
     process = subprocess.Popen(
         command,
         shell=True,
@@ -42,16 +44,19 @@ def run_pytest_live(command):
     process.wait()
     return full_output
 
-if __name__ == "__main__":
+
+def main():
     test_target = sys.argv[1] if len(sys.argv) > 1 else "tests/"
     report_html = "test_report.html"
     report_json = "report.json"
 
+    # Ensure we are in base project directory
     base_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base_dir)
 
+    # Run pytest with live output
     pytest_command = (
-        f"pytest {test_target} "
+        f"pytest -s {test_target} "
         f"--html={report_html} --self-contained-html "
         f"--json-report --json-report-file={report_json} "
         f"--maxfail=1000 --disable-warnings"
@@ -60,14 +65,18 @@ if __name__ == "__main__":
     print("Running tests...\n")
     full_output = run_pytest_live(pytest_command)
 
-    match = re.search(r"in (\d+\.\d+)s", full_output)
-    duration = match.group(1) + " seconds" if match else "N/A"
+    # Extract duration from output
+    duration_match = re.search(r"in (\d+\.\d+)s", full_output)
+    duration = f"{duration_match.group(1)} seconds" if duration_match else "N/A"
 
+    # Timestamp
     now_wib = datetime.now(pytz.timezone("Asia/Jakarta"))
     waktu = now_wib.strftime("%d %b %Y | %H:%M WIB")
 
+    # Parse JSON report
     total, passed, failed = parse_test_result_json(report_json)
 
+    # Build email
     subject = f"Automation Test Report for GenMaju - {waktu}"
     body = f"""
     <b>Automation Test Report for <a href="https://www.generasimaju.co.id/">https://www.generasimaju.co.id</a></b><br><br>
@@ -87,6 +96,7 @@ if __name__ == "__main__":
     smtp_user = os.getenv("EMAIL_USER")
     smtp_pass = os.getenv("EMAIL_PASS")
 
+    # Uncomment if sending email is needed
     if smtp_user and smtp_pass:
         try:
             send_email_with_attachment(
@@ -102,3 +112,7 @@ if __name__ == "__main__":
             print(f"Failed to send email: {e}")
     else:
         print("EMAIL_USER or EMAIL_PASS not set in .env — email not sent.")
+
+
+if __name__ == "__main__":
+    main()
