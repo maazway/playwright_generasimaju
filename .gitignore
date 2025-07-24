@@ -42,5 +42,6 @@ report.json
 .DS_Store
 Thumbs.db
 
-# older files
+# custom files
 code_lama
+.ini
