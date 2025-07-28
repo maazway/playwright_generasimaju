@@ -1,6 +1,6 @@
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
-from playwright.sync_api import expect
+from playwright.sync_api import expect, Page
 
 def login_valid(page):
     home_page = HomePage(page)
@@ -20,3 +20,15 @@ def login_valid(page):
         close_button.click(force=True)
     except:
         pass
+
+
+def wait_until_page_ready(page: Page, timeout: int = 10000):
+    # Tunggu hingga network idle dan ada elemen utama muncul (misalnya <body> atau loader hilang)
+    page.wait_for_load_state("networkidle", timeout=timeout)
+
+    # Tambahan: pastikan elemen penting muncul (misalnya heading, atau kontainer utama)
+    expect(page.locator("body")).to_be_visible(timeout=timeout)
+
+def wait_10s(page: Page):
+    # Tunggu selama 10 detik
+    page.wait_for_timeout(10000)

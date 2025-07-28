@@ -25,5 +25,5 @@ class HomePage:
     def click_submenu_bunda(self):
         self.page.get_by_role("link", name="Bunda", exact=True).click()
 
-    def click_artikel_menu(self):
-        self.page.locator("text=Artikel").first.click()
+    def click_submenu_anak(self):
+        self.page.get_by_role("link", name="Anak", exact=True).click()
