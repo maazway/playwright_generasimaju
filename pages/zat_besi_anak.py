@@ -36,16 +36,40 @@ class ZatBesiAnak:
             locator.scroll_into_view_if_needed()
             locator.click()
 
-    # Klik tombol lanjutkan
-    def klik_lanjutkan(self):
-        self.page.get_by_role("button", name="Lanjutkan").click()
-
     # Klik checkbox consent
     def klik_consent_checkbox(self):
         self.page.get_by_role("checkbox", name="Dengan ini bersedia untuk").click()
 
+    # Klik tombol lanjutkan
+    def klik_lanjutkan(self):
+        self.page.get_by_role("button", name="Lanjutkan").click()
+
+    # Questions
+    def a1(self):
+        self.page.locator('//*[@id="wrapper-answer"]/div/div[1]').click()
+    def a2(self):
+        self.page.locator('//*[@id="wrapper-answer"]/div/div[2]').click()
+    def a3(self):
+        self.page.locator('//*[@id="wrapper-answer"]/div/div[3]').click()
+    def a4(self):
+        self.page.locator('//*[@id="wrapper-answer"]/div/div[4]').click()
+
+    # Klik Dapatkan Hasil
+    def klik_dapatkan_hasil(self):
+        self.page.get_by_role("button", name="Dapatkan Hasil").click()
+
     # Assertions
-    def is_memiliki_resiko(self):
-        expect(self.page.locator("text=Memiliki Risiko")).to_be_visible(timeout=10000)
-    def is_tidak_memiliki_resiko(self):
+    def is_berisiko(self):
+        expect(self.page.locator("text=Berisiko")).to_be_visible(timeout=10000)
+    def is_tidak_berisiko(self):
         expect(self.page.locator("text=Tidak Berisiko")).to_be_visible(timeout=10000)
+
+    # Scrool to text
+    def scroll_to_text(self):
+        self.page.locator("text=Temukan Artikel").scroll_into_view_if_needed()
+
+    # Floating banner
+    def floating_banner(self):
+        return self.page.locator('//*[@id="tools-ironc-result"]/div/div/picture/img').click()
+    
+    # Landing page 
